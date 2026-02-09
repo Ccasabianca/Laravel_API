@@ -32,7 +32,7 @@ class BookController extends Controller
 
         $book = Book::create($validated);
 
-        return (new BookResource($book))->response()->setStatusCode(201);
+        return new BookResource($book);
     }
 
     /**
@@ -46,7 +46,7 @@ class BookController extends Controller
     /**
      * Update the specified resource in storage.
      */
- public function update(Request $request, Book $book)
+    public function update(Request $request, Book $book)
     {
         $validated = $request->validate([
             'title' => ['required', 'string', 'min:3', 'max:255'],
@@ -68,7 +68,7 @@ class BookController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-public function destroy(Book $book)
+    public function destroy(Book $book)
     {
         $book->delete();
 
