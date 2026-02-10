@@ -7,6 +7,7 @@ use App\Http\Resources\BookResource;
 use App\Models\Book;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Cache;
 
 class BookController extends Controller
 {
@@ -15,7 +16,8 @@ class BookController extends Controller
      */
     public function index()
     {
-        return BookResource::collection(Book::orderBy('id', 'asc')->get());
+        $books = Book::orderBy('id', 'asc')->paginate(2);
+        return BookResource::collection($books);
     }
 
     /**
@@ -40,7 +42,13 @@ class BookController extends Controller
      */
     public function show(Book $book)
     {
-        return new BookResource($book);
+        $cacheKey = "book:{$book->id}";
+
+        $bookData = Cache::remember($cacheKey, now()->addMinutes(60), function () use ($book) {
+            return Book::findOrFail($book->id);
+        });
+
+        return new BookResource($bookData);
     }
 
     /**
@@ -60,8 +68,8 @@ class BookController extends Controller
             ],
         ]);
 
+        Cache::forget("book:{$book->id}");
         $book->update($validated);
-
         return new BookResource($book);
     }
 
@@ -70,8 +78,9 @@ class BookController extends Controller
      */
     public function destroy(Book $book)
     {
-        $book->delete();
 
+        Cache::forget("book:{$book->id}");
+        $book->delete();
         return response()->noContent();
     }
 }
