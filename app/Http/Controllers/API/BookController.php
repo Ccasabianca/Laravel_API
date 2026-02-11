@@ -30,10 +30,10 @@ class BookController extends Controller
      *         @OA\JsonContent(
      *             example={
      *               "data": {
-     *                 {"id": 1, "title": "Harry Potter", "author": "J.K Rowling", "summary": "Un jeune sorcier...", "isbn": "1234567890123"}
+     *                 {"title": "Harry Potter", "author": "J.K Rowling", "summary": "Un jeune sorcier...", "isbn": "1234567890123", "_links": { "self": "http://localhost:8000/api/v1/books/1", "update": "http://localhost:8000/api/v1/books/1", "delete": "http://localhost:8000/api/v1/books/1","all": "http://localhost:8000/api/v1/books" }},
      *               },
      *               "links": {"first":"...", "last":"...", "prev":null, "next":"..."},
-     *               "meta": {"current_page": 1, "per_page": 2, "total": 10}
+     *               "meta": {"current_page": 1, "from": 1, "lastpage": 3, "links":  { "url": null, "label": "&laquo; Previous", "page": null, "active": false }, { "url": "http://localhost:8000/api/v1/books?page=1", "label": "1", "page": 1, "active": true }, { "url": "http://localhost:8000/api/v1/books?page=2", "label": "2", "page": 2, "active": false }, { "url": "http://localhost:8000/api/v1/books?page=3", "label": "3", "page": 3, "active": false }, { "url": "http://localhost:8000/api/v1/books?page=2", "label": "Next &raquo;", "page": 2, "active": false } ,"path": "http://localhost:8000/api/v1/books", "per_page": 2, "to": 2, "total": 6}
      *             }
      *         )
      *     )
