@@ -6,9 +6,41 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
+use OpenApi\Annotations as OA;
 
 class UserController extends Controller
 {
+
+/**
+ * @OA\Post(
+ *     path="/api/v1/register",
+ *     summary="Inscription utilisateur",
+ *     description="Crée un utilisateur et lui accorde un token",
+ *     tags={"Auth"},
+ *     @OA\Parameter(name="Accept", in="header", required=true, @OA\Schema(type="string", example="application/json")),
+ *     @OA\RequestBody(
+ *         required=true,
+ *         @OA\JsonContent(
+ *             required={"name","email","password"},
+ *             @OA\Property(property="name", type="string", example="Jean Dupont"),
+ *             @OA\Property(property="email", type="string", example="jean@mail.com"),
+ *             @OA\Property(property="password", type="string", example="password123")
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=201,
+ *         description="Utilisateur créé",
+ *         @OA\JsonContent(example={"token":"...","user":{"id":1,"name":"Jean Dupont","email":"jean@mail.com"}})
+ *     ),
+ *     @OA\Response(
+ *         response=422,
+ *         description="Erreur validation",
+ *         @OA\JsonContent(example={"message":"The email field is required.","errors":{"email":{"The email field is required."}}})
+ *     )
+ * )
+ */
+
+
     public function register(Request $request)
     {
         $validated = $request->validate([
@@ -30,6 +62,35 @@ class UserController extends Controller
             'user' => $user,
         ], 201);
     }
+
+/**
+ * @OA\Post(
+ *     path="/api/v1/login",
+ *     summary="Connexion utilisateur",
+ *     description="Authentifie un utilisateur. Limité à 10 tentatives par minute",
+ *     tags={"Auth"},
+ *     @OA\Parameter(name="Accept", in="header", required=true, @OA\Schema(type="string", example="application/json")),
+ *     @OA\RequestBody(
+ *         required=true,
+ *         @OA\JsonContent(
+ *             required={"email","password"},
+ *             @OA\Property(property="email", type="string", example="jean@mail.com"),
+ *             @OA\Property(property="password", type="string", example="password123")
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=200,
+ *         description="Connexion réussie",
+ *         @OA\JsonContent(example={"token":"...","user":{"id":1,"name":"Jean Dupont","email":"jean@mail.com"}})
+ *     ),
+ *     @OA\Response(
+ *         response=422,
+ *         description="Identifiants invalides",
+ *         @OA\JsonContent(example={"message":"Identifiants invalides"})
+ *     )
+ * )
+ */
+
 
     public function login(Request $request)
     {
@@ -53,6 +114,35 @@ class UserController extends Controller
             'user' => $user,
         ]);
     }
+
+/**
+ * @OA\Post(
+ *     path="/api/v1/logout",
+ *     summary="Déconnexion",
+ *     description="Supprime le token actuel. Il faut être connecté",
+ *     tags={"Auth"},
+ *     security={{"bearerAuth":{}}},
+ *     @OA\Parameter(name="Accept", in="header", required=true, @OA\Schema(type="string", example="application/json")),
+ *     @OA\Parameter(
+ *         name="Authorization",
+ *         in="header",
+ *         required=true,
+ *         description="Bearer {token}",
+ *         @OA\Schema(type="string", example="Bearer eyJ0eXAiOiJKV1QiLCJhbGciOi...")
+ *     ),
+ *     @OA\Response(
+ *         response=200,
+ *         description="Déconnecté",
+ *         @OA\JsonContent(example={"message":"Déconnecté"})
+ *     ),
+ *     @OA\Response(
+ *         response=401,
+ *         description="Non authentifié",
+ *         @OA\JsonContent(example={"message":"Unauthenticated."})
+ *     )
+ * )
+ */
+
 
     public function logout(Request $request)
     {

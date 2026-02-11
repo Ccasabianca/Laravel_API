@@ -1,0 +1,686 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Laravel Books API",
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "http://localhost:8000",
+            "description": "Laravel serve"
+        }
+    ],
+    "paths": {
+        "/api/v1/books": {
+            "get": {
+                "tags": [
+                    "Books"
+                ],
+                "summary": "Liste paginée des livres",
+                "description": "Récupère une liste de livres avec pagination (2 par page). Endpoint public",
+                "operationId": "6b31f69dc1e3dcc08a84e27675d03f20",
+                "parameters": [
+                    {
+                        "name": "Accept",
+                        "in": "header",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "application/json"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Succès",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": {
+                                    "data": [
+                                        {
+                                            "id": 1,
+                                            "title": "Harry Potter",
+                                            "author": "J.K Rowling",
+                                            "summary": "Un jeune sorcier...",
+                                            "isbn": "1234567890123"
+                                        }
+                                    ],
+                                    "links": {
+                                        "first": "...",
+                                        "last": "...",
+                                        "prev": null,
+                                        "next": "..."
+                                    },
+                                    "meta": {
+                                        "current_page": 1,
+                                        "per_page": 2,
+                                        "total": 10
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Books"
+                ],
+                "summary": "Créer un livre",
+                "description": "Crée un livre. Il faut être connecté",
+                "operationId": "a46d863254c37de8000249d5cebcf6ef",
+                "parameters": [
+                    {
+                        "name": "Accept",
+                        "in": "header",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "application/json"
+                        }
+                    },
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "Bearer {token}",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOi..."
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "title",
+                                    "author",
+                                    "summary",
+                                    "isbn"
+                                ],
+                                "properties": {
+                                    "title": {
+                                        "type": "string",
+                                        "example": "Harry Potter"
+                                    },
+                                    "author": {
+                                        "type": "string",
+                                        "example": "J.K Rowling"
+                                    },
+                                    "summary": {
+                                        "type": "string",
+                                        "example": "Un jeune sorcier découvre ses pouvoirs..."
+                                    },
+                                    "isbn": {
+                                        "type": "string",
+                                        "example": "1234567890123"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Livre créé",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": {
+                                    "data": {
+                                        "id": 1,
+                                        "title": "Harry Potter",
+                                        "author": "J.K Rowling",
+                                        "summary": "Un jeune sorcier...",
+                                        "isbn": "1234567890123"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Non authentifié",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": {
+                                    "message": "Unauthenticated."
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Erreur validation",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": {
+                                    "message": "The title field is required.",
+                                    "errors": {
+                                        "title": [
+                                            "The title field is required."
+                                        ]
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/books/{book}": {
+            "get": {
+                "tags": [
+                    "Books"
+                ],
+                "summary": "Afficher un livre",
+                "description": "Affiche le livre qui correspond à l'ID. Endpoint public",
+                "operationId": "26853db3e57948592e25afb7354741ae",
+                "parameters": [
+                    {
+                        "name": "Accept",
+                        "in": "header",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "application/json"
+                        }
+                    },
+                    {
+                        "name": "book",
+                        "in": "path",
+                        "description": "ID du livre",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Succès",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": {
+                                    "data": {
+                                        "id": 1,
+                                        "title": "Harry Potter",
+                                        "author": "J.K Rowling",
+                                        "summary": "Un jeune sorcier...",
+                                        "isbn": "1234567890123"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Livre non trouvé",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": {
+                                    "message": "Not Found"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Books"
+                ],
+                "summary": "Mettre à jour un livre",
+                "description": "Met à jour un livre. Il faut être connecté",
+                "operationId": "9ccb7959f0024a948a739745830fe0a5",
+                "parameters": [
+                    {
+                        "name": "Accept",
+                        "in": "header",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "application/json"
+                        }
+                    },
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "Bearer {token}",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOi..."
+                        }
+                    },
+                    {
+                        "name": "book",
+                        "in": "path",
+                        "description": "ID du livre",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "title",
+                                    "author",
+                                    "summary",
+                                    "isbn"
+                                ],
+                                "properties": {
+                                    "title": {
+                                        "type": "string",
+                                        "example": "Nouveau titre"
+                                    },
+                                    "author": {
+                                        "type": "string",
+                                        "example": "Nouvel auteur"
+                                    },
+                                    "summary": {
+                                        "type": "string",
+                                        "example": "Résumé mis à jour"
+                                    },
+                                    "isbn": {
+                                        "type": "string",
+                                        "example": "1234567890123"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Livre mis à jour",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": {
+                                    "data": {
+                                        "id": 1,
+                                        "title": "Nouveau titre",
+                                        "author": "Nouvel auteur",
+                                        "summary": "Résumé mis à jour",
+                                        "isbn": "1234567890123"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Non authentifié",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": {
+                                    "message": "Unauthenticated."
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Non trouvé",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": {
+                                    "message": "Not Found"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Erreur validation",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": {
+                                    "message": "The title field is required.",
+                                    "errors": {
+                                        "title": [
+                                            "The title field is required."
+                                        ]
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Books"
+                ],
+                "summary": "Supprimer un livre",
+                "description": "Supprime un livre. Il faut être connecté",
+                "operationId": "3c2179ee2a49a13414b682dc475d6886",
+                "parameters": [
+                    {
+                        "name": "Accept",
+                        "in": "header",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "application/json"
+                        }
+                    },
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "Bearer {token}",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOi..."
+                        }
+                    },
+                    {
+                        "name": "book",
+                        "in": "path",
+                        "description": "ID du livre",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Supprimé"
+                    },
+                    "401": {
+                        "description": "Non authentifié",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": {
+                                    "message": "Unauthenticated."
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Non trouvé",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": {
+                                    "message": "Not Found"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/register": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Inscription utilisateur",
+                "description": "Crée un utilisateur et lui accorde un token",
+                "operationId": "3443e3fe000081005957217d95b7c7ba",
+                "parameters": [
+                    {
+                        "name": "Accept",
+                        "in": "header",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "application/json"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name",
+                                    "email",
+                                    "password"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Jean Dupont"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "example": "jean@mail.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "example": "password123"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Utilisateur créé",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": {
+                                    "token": "...",
+                                    "user": {
+                                        "id": 1,
+                                        "name": "Jean Dupont",
+                                        "email": "jean@mail.com"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Erreur validation",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": {
+                                    "message": "The email field is required.",
+                                    "errors": {
+                                        "email": [
+                                            "The email field is required."
+                                        ]
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/login": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Connexion utilisateur",
+                "description": "Authentifie un utilisateur. Limité à 10 tentatives par minute",
+                "operationId": "1eb51b67697ed1c691a7fbcf25b03450",
+                "parameters": [
+                    {
+                        "name": "Accept",
+                        "in": "header",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "application/json"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "email",
+                                    "password"
+                                ],
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "example": "jean@mail.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "example": "password123"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Connexion réussie",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": {
+                                    "token": "...",
+                                    "user": {
+                                        "id": 1,
+                                        "name": "Jean Dupont",
+                                        "email": "jean@mail.com"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Identifiants invalides",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": {
+                                    "message": "Identifiants invalides"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/logout": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Déconnexion",
+                "description": "Supprime le token actuel. Il faut être connecté",
+                "operationId": "2100e6e17f6eaf1ec83a4b2071aa85ca",
+                "parameters": [
+                    {
+                        "name": "Accept",
+                        "in": "header",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "application/json"
+                        }
+                    },
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "Bearer {token}",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOi..."
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Déconnecté",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": {
+                                    "message": "Déconnecté"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Non authentifié",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": {
+                                    "message": "Unauthenticated."
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        }
+    },
+    "components": {
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "bearerFormat": "JWT",
+                "scheme": "bearer"
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Books",
+            "description": "Books"
+        },
+        {
+            "name": "Auth",
+            "description": "Auth"
+        }
+    ]
+}
